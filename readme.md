@@ -1,5 +1,6 @@
 # Twilio-YouTube
 Sending Live Streaming SMS Notifications with PHP and YouTube API
+![](https://s3.amazonaws.com/com.twilio.prod.twilio-docs/images/youtube_live_sms_notifications.width-808.png)
 
 - You need to have the following accounts:
    - A [Twilio Account](https://www.twilio.com/try-twilio)
