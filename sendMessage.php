@@ -10,9 +10,9 @@ $dotenv->load();
  */
 function connectDatabase()
 {
-    $databaseName = getenv(DB_DATABASE);
-    $databaseUserName = getenv(DB_USERNAME);
-    $databasePassword = getenv(DB_PASSWORD);
+    $databaseName = getenv("DB_DATABASE");
+    $databaseUserName = getenv("DB_USERNAME");
+    $databasePassword = getenv("DB_PASSWORD");
 
     $databaseConnection = pg_connect("host=localhost dbname=$databaseName user=$databaseUserName password=$databasePassword");
 
@@ -32,14 +32,14 @@ function connectDatabase()
  */
 function checkIfChannelIsLive()
 {
-    $channelID = "UCkAGrHCLFmlK3H2kd6isipg";
-    $googleApiKey = getenv(GOOGLE_API_KEY);
-    $channelAPI = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$channelID."&type=video&eventType=live&key=".$googleApiKey;
+    $channelID     = getenv("CHANNEL_ID");
+    $googleApiKey  = getenv("GOOGLE_API_KEY");
+    $channelAPI    = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$channelID."&type=video&eventType=live&key=".$googleApiKey;
     
-    $channelInfo = json_decode(file_get_contents($channelAPI));
+    $channelInfo   = json_decode(file_get_contents($channelAPI));
 
     $channelStatus = $channelInfo->pageInfo->totalResults > 0 ? true : false;
-    $videoId = $channelInfo->items[0]->id->videoId;
+    $videoId       = $channelInfo->items[0]->id->videoId;
 
     $previousVideoId = getPreviousVideoID();
 
@@ -79,10 +79,10 @@ function getPreviousVideoId()
  */
 function sendSms()
 {
-    $twilioAccountSid = getenv(TWILIO_SID);
-    $twilioAuthToken = getenv(TWILIO_TOKEN);
+    $twilioAccountSid = getenv("TWILIO_SID");
+    $twilioAuthToken = getenv("TWILIO_TOKEN");
     $client = new Client($twilioAccountSid, $twilioAuthToken);
-    $myTwilioNumber = "+18558371886";
+    $myTwilioNumber = getenv("TWILIO_NUMBER");
 
     $subscribers = getSubscribers();
     
@@ -107,7 +107,7 @@ function sendSms()
 function getSubscribers()
 {
     $databaseConnection = connectDatabase();
-    $query = "SELECT mobile_numbers FROM subscribers";
+    $query = "SELECT mobile_number FROM subscribers";
 
     $queryResult = pg_query($databaseConnection, $query);
 
